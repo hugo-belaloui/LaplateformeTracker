@@ -1,4 +1,4 @@
-package src.main.java.Controller;
+package Controller;
 
 public class StudentController {
     

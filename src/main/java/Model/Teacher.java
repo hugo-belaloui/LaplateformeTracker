@@ -1,4 +1,4 @@
-package src.main.java.Model;
+package Model;
 
 public class Teacher {
     
