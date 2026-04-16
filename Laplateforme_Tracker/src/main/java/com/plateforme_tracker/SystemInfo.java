@@ -1,4 +1,4 @@
-package com.plateforme.tracker;
+package com.plateforme_tracker;
 
 public class SystemInfo {
 

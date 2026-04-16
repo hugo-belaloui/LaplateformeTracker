@@ -1,4 +1,4 @@
-module com.plateforme.tracker {
+module com.plateforme_tracker {
     requires javafx.controls;
-    exports com.plateforme.tracker;
+    exports com.plateforme_tracker;
 }
