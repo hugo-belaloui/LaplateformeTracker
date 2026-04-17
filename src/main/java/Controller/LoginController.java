@@ -1,5 +1,6 @@
 package Controller;
 
+import View.StageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -20,7 +21,14 @@ public class LoginController {
 
         System.out.println("Username: " + username);
         System.out.println("Password: " + password);
-        if (!username.equals("admin") && !password.equals("admin")) errorLogin();
+        if (!username.equals("admin") && !password.equals("admin")) {
+            errorLogin();
+            return ;
+        }
+        if (StageManager.switchScene("/View/TeacherDashboard.fxml") == 1) {
+                System.err.println("Error loading FXML file.");
+                return ;
+        }
     }
 
     private void errorLogin() {

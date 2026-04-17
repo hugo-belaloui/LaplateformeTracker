@@ -1,3 +1,4 @@
+import View.StageManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ public class LaPlateformeTracker extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
         VBox root = loader.load();
 
+        StageManager.setStage(primaryStage);
         primaryStage.setTitle("LaPlateformeTracker");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
