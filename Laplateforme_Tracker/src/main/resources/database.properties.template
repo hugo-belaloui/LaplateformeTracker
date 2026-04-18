@@ -1,0 +1,3 @@
+db.url=jdbc:postgresql://localhost:PORT_HERE/DB_HERE
+db.user=USER_HERE
+db.password=PASSWORD_HERE
