@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -25,6 +26,14 @@ public class TeacherController {
     @FXML
     private Button delStudentButton;
     @FXML
+    private ListView<String> gradesListView;
+    @FXML
+    private Button addGradeButton;
+    @FXML
+    private Button delGradeButton;
+    @FXML
+    private Button editGradeButton;
+    @FXML
     private Text firstNameText;
     @FXML
     private Text lastNameText;
@@ -34,6 +43,7 @@ public class TeacherController {
     private Text avgGradesText;
 
     private ClassName selectedClass = null;
+    private Student selectedStudent = null;
 
     private ArrayList<ClassName> classes = new ArrayList<>();
 
@@ -65,26 +75,111 @@ public class TeacherController {
         studentListView.setItems(FXCollections.observableArrayList(studentNames));
     }
 
-    private void showStudentDetails(String fullName) {
-        double sum;
+    private void loadGradesPanel(Student s) {
+        ArrayList<String> gradeStrings = new ArrayList<>();
+        for (double grade : s.getGrades()) {
+            gradeStrings.add(String.format("%.2f", grade));
+        }
+        gradesListView.setItems(FXCollections.observableArrayList(gradeStrings));
+    }
 
+    private void showStudentDetails(String fullName) {
         for (Student s : selectedClass.getStudents()) {
             if ((s.getFirstName() + " " + s.getLastName()).equals(fullName)) {
+                selectedStudent = s;
+                selectedStudent.reloadGrades();
+
                 firstNameText.setText(s.getFirstName());
                 lastNameText.setText(s.getLastName());
                 ageText.setText(String.valueOf(s.getAge()));
 
                 ArrayList<Double> grades = s.getGrades();
                 if (!grades.isEmpty()) {
-                    sum = 0;
-                    for (double grade : grades){
+                    double sum = 0;
+                    for (double grade : grades) {
                         sum += grade;
                     }
                     avgGradesText.setText(String.format("%.2f", sum / grades.size()));
+                } else {
+                    avgGradesText.setText("-");
                 }
+
+                loadGradesPanel(s);
                 return;
             }
         }
+    }
+
+    @FXML
+    private void handleAddGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Grade");
+        dialog.setHeaderText("Add a grade for " + selectedStudent.getFirstName());
+        dialog.setContentText("Grade:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                double grade = Double.parseDouble(value.trim());
+                selectedStudent.addGrade(grade);
+                selectedStudent.updateGrades();
+                loadGradesPanel(selectedStudent);
+                showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+            } catch (NumberFormatException e) {
+                // user typed something that isn't a number, do nothing
+            }
+        });
+    }
+
+    @FXML
+    private void handleDeleteGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        int index = gradesListView.getSelectionModel().getSelectedIndex();
+        if (index == -1) {
+            return;
+        }
+
+        selectedStudent.getGrades().remove(index);
+        selectedStudent.updateGrades();
+        showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+    }
+
+    @FXML
+    private void handleEditGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        int index = gradesListView.getSelectionModel().getSelectedIndex();
+        if (index == -1) {
+            return;
+        }
+
+        double currentGrade = selectedStudent.getGrades().get(index);
+
+        TextInputDialog dialog = new TextInputDialog(String.format("%.2f", currentGrade));
+        dialog.setTitle("Edit Grade");
+        dialog.setHeaderText("Edit grade for " + selectedStudent.getFirstName());
+        dialog.setContentText("New value:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                double newGrade = Double.parseDouble(value.trim());
+                selectedStudent.getGrades().set(index, newGrade);
+                selectedStudent.updateGrades();
+                showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+            } catch (NumberFormatException e) {
+                // user typed something that isn't a number, do nothing
+            }
+        });
     }
 
     @FXML

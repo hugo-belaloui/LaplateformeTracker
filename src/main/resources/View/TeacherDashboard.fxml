@@ -129,6 +129,18 @@
                   <Text fx:id="ageText" layoutX="14.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
                   <Text layoutX="116.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Avg grades" />
                   <Text fx:id="avgGradesText" layoutX="116.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                  <Button fx:id="addGradeButton" layoutX="14.0" layoutY="197.0" mnemonicParsing="false" onAction="#handleAddGrade" text="Add" />
+                  <Label alignment="CENTER" layoutX="14.0" layoutY="169.0" style="&#10;" text="Grades" textAlignment="CENTER" wrapText="false">
+                     <font>
+                        <Font size="18.0" fx:id="x11" />
+                     </font>
+                     <textFill>
+                        <Color red="0.624" green="0.624" blue="0.624" fx:id="x21" />
+                     </textFill>
+                  </Label>
+                  <Button fx:id="delGradeButton" layoutX="78.0" layoutY="197.0" mnemonicParsing="false" onAction="#handleDeleteGrade" text="Del" />
+                  <ListView fx:id="gradesListView" layoutX="10.0" layoutY="237.0" prefHeight="281.0" prefWidth="200.0" />
+                  <Button fx:id="editGradeButton" layoutX="137.0" layoutY="197.0" mnemonicParsing="false" onAction="#handleEditGrade" text="Edit" />
           </children>
         </AnchorPane>
       </items>
