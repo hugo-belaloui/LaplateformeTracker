@@ -1,9 +1,16 @@
 package Controller;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import Model.ClassName;
 import Model.Student;
@@ -13,6 +20,10 @@ public class TeacherController {
     private ListView<String> classListView;
     @FXML
     private ListView<String> studentListView;
+    @FXML
+    private Button addStudentButton;
+    @FXML
+    private Button delStudentButton;
     @FXML
     private Text firstNameText;
     @FXML
@@ -26,28 +37,19 @@ public class TeacherController {
 
     private ArrayList<ClassName> classes = new ArrayList<>();
 
-    private void loadTestData() {
-        Student achraf = new Student(1L, "Achraf", "xxxxxxx", (byte) 20, 1L);
-        Student hugo = new Student(2L, "Hugo", "xxxxxxx", (byte) 21, 2L);
-        Student andre = new Student(3L, "André", "xxxxx", (byte) 22, 3L);
+    private void loadFromDatabase() {
+        ClassName allStudents = new ClassName("All Students");
 
-        achraf.addGrades(new double[]{19.0, 20.0});
-        hugo.addGrades(new double[]{19.0, 20.0});
-        andre.addGrades(new double[]{19.0, 20.0});
+        for (Student s : Student.findAll()) {
+            allStudents.addStudent(s);
+        }
 
-        ClassName class5th = new ClassName("5eme");
-        class5th.addStudent(achraf);
-        class5th.addStudent(hugo);
-
-        ClassName class5th2 = new ClassName("5eme2");
-        class5th2.addStudent(andre);
-
-        classes.add(class5th);
-        classes.add(class5th2);
+        classes.add(allStudents);
     }
 
     private void loadClassPanel() {
         ArrayList<String> classNames = new ArrayList<>();
+
         for (ClassName c : classes) {
             classNames.add(c.getName());
         }
@@ -56,6 +58,7 @@ public class TeacherController {
 
     private void loadStudentPanel(ClassName c) {
         ArrayList<String> studentNames = new ArrayList<>();
+
         for (Student s : c.getStudents()) {
             studentNames.add(s.getFirstName() + " " + s.getLastName());
         }
@@ -63,9 +66,7 @@ public class TeacherController {
     }
 
     private void showStudentDetails(String fullName) {
-        double sum = 0;
-        double avg = 0;
-        ArrayList<Double> grades;
+        double sum;
 
         for (Student s : selectedClass.getStudents()) {
             if ((s.getFirstName() + " " + s.getLastName()).equals(fullName)) {
@@ -73,19 +74,91 @@ public class TeacherController {
                 lastNameText.setText(s.getLastName());
                 ageText.setText(String.valueOf(s.getAge()));
 
-                grades = s.getGrades();
+                ArrayList<Double> grades = s.getGrades();
                 if (!grades.isEmpty()) {
-                    avg = sum / grades.size();
-                    avgGradesText.setText(String.format("%.2f", avg));
+                    sum = 0;
+                    for (double grade : grades){
+                        sum += grade;
+                    }
+                    avgGradesText.setText(String.format("%.2f", sum / grades.size()));
                 }
-                return ;
+                return;
             }
         }
     }
 
     @FXML
+    private void handleAddStudent() {
+        if (selectedClass == null) 
+        {
+            return;}
+
+        Dialog<Student> dialog = new Dialog<>();
+        dialog.setTitle("Add Student");
+        dialog.setHeaderText("Add a student to " + selectedClass.getName());
+
+        ButtonType addButton = new ButtonType("Add");
+        dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField firstNameField = new TextField();
+        TextField lastNameField = new TextField();
+        TextField ageField = new TextField();
+
+        grid.add(new Label("First name:"), 0, 0);
+        grid.add(firstNameField, 1, 0);
+        grid.add(new Label("Last name:"), 0, 1);
+        grid.add(lastNameField, 1, 1);
+        grid.add(new Label("Age:"), 0, 2);
+        grid.add(ageField, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(buttonClicked -> {
+            if (buttonClicked == addButton) {
+                try {
+                    String firstName = firstNameField.getText().trim();
+                    String lastName = lastNameField.getText().trim();
+                    byte age = Byte.parseByte(ageField.getText().trim());
+                    return new Student(null, firstName, lastName, age, null);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        Optional<Student> result = dialog.showAndWait();
+        result.ifPresent(student -> {
+            student.save();
+            selectedClass.addStudent(student);
+            loadStudentPanel(selectedClass);
+        });
+    }
+
+    @FXML
+    private void handleDeleteStudent() {
+        if (selectedClass == null) return;
+
+        String selected = studentListView.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        selectedClass.getStudents().removeIf(s -> (s.getFirstName() + " " + s.getLastName()).equals(selected));
+
+        loadStudentPanel(selectedClass);
+
+        firstNameText.setText("-");
+        lastNameText.setText("-");
+        ageText.setText("-");
+        avgGradesText.setText("-");
+    }
+
+    @FXML
     public void initialize() {
-        loadTestData();
+        loadFromDatabase();
         loadClassPanel();
 
         classListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

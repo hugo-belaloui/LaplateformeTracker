@@ -30,17 +30,20 @@ public class initdatabase {
                 CREATE TABLE IF NOT EXISTS students(
                     id SERIAL PRIMARY KEY,
                     user_id INT REFERENCES users(id),
-                    name VARCHAR (255)
+                    first_name VARCHAR(255),
+                    last_name VARCHAR(255),
+                    age SMALLINT,
+                    grades DOUBLE PRECISION[]
                 );
                 """;
-        
+
         execute(sql);
     }
 
     private static void createTeacherTable(){
         String sql = """
                 CREATE TABLE IF NOT EXISTS teachers(
-                    id SZERIAL PRIMARY KEY,
+                    id SERIAL PRIMARY KEY,
                     user_id INT REFERENCES users(id),
                     name VARCHAR (255)
                 );

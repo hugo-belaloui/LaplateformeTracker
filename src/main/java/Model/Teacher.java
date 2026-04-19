@@ -19,7 +19,7 @@ public class Teacher {
 
     public static Teacher findByUserId(Long userId){
         try (Connection conn = DatabaseConnection.getconnection() ){
-            String sql = "SELECT FROM teachers WHERE user_id = ?";
+            String sql = "SELECT * FROM teachers WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, userId);
 
