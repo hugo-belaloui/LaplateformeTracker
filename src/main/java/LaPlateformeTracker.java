@@ -5,10 +5,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import atlantafx.base.theme.PrimerLight;
+import atlantafx.base.theme.PrimerDark;
+
 public class LaPlateformeTracker extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
         VBox root = loader.load();
 

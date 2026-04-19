@@ -1,5 +1,5 @@
 package Model;
-
+import utils.DatabaseConnection;
 import java.util.ArrayList;
 
 public class ClassName {

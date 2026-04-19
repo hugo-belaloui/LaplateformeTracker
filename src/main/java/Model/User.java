@@ -1,7 +1,7 @@
 package Model;
 
 import java.sql.*;
-import utils.databaseconnection;
+import utils.DatabaseConnection;
 
 public class User {
     private Long id ;
@@ -23,7 +23,7 @@ public class User {
 
 
     public static User findByEmail(String email){
-        try (Connection conn = databaseconnection.getconnection()){
+        try (Connection conn = DatabaseConnection.getconnection()){
 
             String sql = "SELECT * FROM users WHERE email = ?";
             PreparedStatement stml = conn.prepareStatement(sql);

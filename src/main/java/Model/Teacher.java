@@ -1,5 +1,5 @@
 package Model;
-import utils.databaseconnection;
+import utils.DatabaseConnection;
 import java.sql.*;;
 
 public class Teacher {
@@ -18,7 +18,7 @@ public class Teacher {
     public Long getUserId(){return userId;}
 
     public static Teacher findByUserId(Long userId){
-        try (Connection conn = databaseconnection.getconnection() ){
+        try (Connection conn = DatabaseConnection.getconnection() ){
             String sql = "SELECT FROM teachers WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, userId);

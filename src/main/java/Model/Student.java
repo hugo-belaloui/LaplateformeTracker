@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import utils.databaseconnection;
+import utils.DatabaseConnection;
 
 public class Student {
     private Long id;
@@ -42,7 +42,7 @@ public class Student {
 
 
     public static Student findByUserId(Long userId){
-        try (Connection conn = databaseconnection.getconnection() ){
+        try (Connection conn = DatabaseConnection.getconnection() ){
             String sql = "SELECT FROM students WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, userId);

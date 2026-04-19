@@ -7,6 +7,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import db.initdatabase;
+
 public class LoginController {
     @FXML
     private TextField usernameField;
@@ -29,6 +31,7 @@ public class LoginController {
                 System.err.println("Error loading FXML file.");
                 return ;
         }
+        initdatabase.init();
     }
 
     private void errorLogin() {
@@ -38,4 +41,5 @@ public class LoginController {
         alert.setContentText("Username or password entered is incorect.");
         alert.showAndWait();
     }
+
 }

@@ -42,6 +42,13 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- UI -->
+        <dependency>
+            <groupId>io.github.mkpaz</groupId>
+            <artifactId>atlantafx-base</artifactId>
+            <version>2.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

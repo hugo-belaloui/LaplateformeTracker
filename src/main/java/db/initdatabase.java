@@ -2,7 +2,7 @@ package db;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import utils.databaseconnection;;
+import utils.DatabaseConnection;;
 
 
 public class initdatabase {
@@ -50,7 +50,7 @@ public class initdatabase {
     }
 
     private static void execute(String sql) {
-        try (Connection conn = databaseconnection.getconnection();
+        try (Connection conn = DatabaseConnection.getconnection();
             Statement stmt = conn.createStatement()) {
             
             stmt.execute(sql);
