@@ -65,7 +65,7 @@ public class InitDatabase {
 
     private static void execute(String sql) {
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
+            Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (Exception e) {
             e.printStackTrace();
