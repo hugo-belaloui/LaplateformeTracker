@@ -103,7 +103,7 @@ public class Student {
     }
 
     public void updateGrades(){
-        try (Connection conn = DatabaseConnection.getconnection()){
+        try (Connection conn = DatabaseConnection.getConnection()){
             String sql = "UPDATE students SET grades = ? WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -119,7 +119,7 @@ public class Student {
     }
 
     public void reloadGrades(){
-        try (Connection conn = DatabaseConnection.getconnection()){
+        try (Connection conn = DatabaseConnection.getConnection()){
             PreparedStatement stmt = conn.prepareStatement("SELECT grades FROM students WHERE id = ?");
             stmt.setLong(1, this.id);
             ResultSet rs = stmt.executeQuery();

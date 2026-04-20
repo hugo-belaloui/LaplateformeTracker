@@ -47,11 +47,10 @@ public class TeacherController {
     private ClassName selectedClass = null;
     private Student selectedStudent = null;
 
-    private ClassName selectedClass = null;
     private ArrayList<ClassName> classes = new ArrayList<>();
 
     private void loadFromDatabase() {
-        ClassName allStudents = new ClassName(1L, "All Students"); // ✅ fixed
+        ClassName allStudents = new ClassName(1L, "All Students");
 
         for (Student s : Student.findAll()) {
             allStudents.addStudent(s);
