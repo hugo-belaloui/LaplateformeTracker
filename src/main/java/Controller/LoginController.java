@@ -19,26 +19,21 @@ public class LoginController {
         String email    = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
-        // check fields are not empty
         if (email.isEmpty() || password.isEmpty()) {
             showError("Please fill in all fields.");
             return;
         }
 
-        // look up user in database
         User user = User.findByEmail(email);
 
-        // wrong email or password
         if (user == null || !user.getPassword().equals(password)) {
             showError("Wrong email or password.");
             return;
         }
 
-        // save session
         SessionManager.setEmail(user.getEmail());
         SessionManager.setRole(user.getRole());
 
-        // go to the right dashboard
         if (user.getRole().equals("admin")) {
             StageManager.switchScene("/View/AdminDashboard.fxml");
         } else if (user.getRole().equals("teacher")) {

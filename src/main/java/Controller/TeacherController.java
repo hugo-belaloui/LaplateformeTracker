@@ -1,11 +1,15 @@
 package Controller;
 
-import javafx.scene.control.TextField;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import Model.ClassName;
+import Model.Student;
+import Utils.SessionManager;
+import Utils.StageManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,15 +17,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import Model.ClassName;
-import Model.Student;
-import Utils.SessionManager;
-import Utils.StageManager;
 
 public class TeacherController {
 
@@ -38,10 +39,6 @@ public class TeacherController {
     private ClassName selectedClass  = null;
     private Student selectedStudent  = null;
     private ArrayList<ClassName> classes = new ArrayList<>();
-
-    // ─────────────────────────────────────────
-    // LOADING DATA
-    // ─────────────────────────────────────────
 
     private void loadFromDatabase() {
         ClassName allStudents = new ClassName(1L, "All Students");
@@ -99,10 +96,6 @@ public class TeacherController {
             }
         }
     }
-
-    // ─────────────────────────────────────────
-    // STUDENT HANDLERS
-    // ─────────────────────────────────────────
 
     @FXML
     public void handleAddStudent() {
@@ -180,10 +173,6 @@ public class TeacherController {
         selectedStudent = null;
     }
 
-    // ─────────────────────────────────────────
-    // GRADE HANDLERS
-    // ─────────────────────────────────────────
-
     @FXML
     public void handleAddGrade() {
         if (selectedStudent == null) return;
@@ -248,10 +237,6 @@ public class TeacherController {
         });
     }
 
-    // ─────────────────────────────────────────
-    // EXPORT CSV
-    // ─────────────────────────────────────────
-
     @FXML
     public void handleExportCSV() {
         FileChooser fileChooser = new FileChooser();
@@ -284,19 +269,11 @@ public class TeacherController {
         }
     }
 
-    // ─────────────────────────────────────────
-    // LOGOUT
-    // ─────────────────────────────────────────
-
     @FXML
     public void handleLogout() {
         SessionManager.clear();
         StageManager.switchScene("/View/Login.fxml");
     }
-
-    // ─────────────────────────────────────────
-    // INITIALIZE
-    // ─────────────────────────────────────────
 
     @FXML
     public void initialize() {

@@ -17,20 +17,16 @@ public class ClassName {
         this.students = new ArrayList<>();
     }
 
-    // getters
     public Long getId()                     { return id; }
     public String getName()                 { return name; }
     public ArrayList<Student> getStudents() { return students; }
 
-    // setter
     public void setName(String name) { this.name = name; }
 
-    // add a student to this class
     public void addStudent(Student student) {
         this.students.add(student);
     }
 
-    // find a class by its id
     public static ClassName findById(Long id) {
         String sql = "SELECT * FROM classes WHERE id = ?";
 

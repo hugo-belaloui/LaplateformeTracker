@@ -20,18 +20,15 @@ public class User {
         this.role = role;
     }
 
-    // getters
     public Long getId()         { return id; }
     public String getEmail()    { return email; }
     public String getPassword() { return password; }
     public String getRole()     { return role; }
 
-    // setters
     public void setEmail(String email)       { this.email = email; }
     public void setPassword(String password) { this.password = password; }
     public void setRole(String role)         { this.role = role; }
 
-    // get all users from database
     public static ArrayList<User> findAll() {
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -55,7 +52,6 @@ public class User {
         return users;
     }
 
-    // save new user to database
     public void save() {
         String sql = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
 
@@ -78,7 +74,6 @@ public class User {
         }
     }
 
-    // delete this user from database
     public void delete() {
         String sql = "DELETE FROM users WHERE id = ?";
 
@@ -93,7 +88,6 @@ public class User {
         }
     }
 
-    // find user by email
     public static User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
 

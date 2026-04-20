@@ -23,7 +23,6 @@ public class Student {
         this.grades = new ArrayList<>();
     }
 
-    // getters
     public Long getId()                  { return id; }
     public String getFirstName()         { return firstName; }
     public String getLastName()          { return lastName; }
@@ -31,12 +30,10 @@ public class Student {
     public byte getAge()                 { return age; }
     public ArrayList<Double> getGrades() { return grades; }
 
-    // setters
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName)   { this.lastName = lastName; }
     public void setAge(byte age)               { this.age = age; }
 
-    // grade helpers
     public void addGrade(double grade) {
         this.grades.add(grade);
     }
@@ -47,7 +44,6 @@ public class Student {
         }
     }
 
-    // get all students from database
     public static ArrayList<Student> findAll() {
         ArrayList<Student> students = new ArrayList<>();
         String sql = "SELECT * FROM students";
@@ -81,7 +77,6 @@ public class Student {
         return students;
     }
 
-    // find one student by user_id
     public static Student findByUserId(Long userId) {
         String sql = "SELECT * FROM students WHERE user_id = ?";
 
@@ -116,7 +111,6 @@ public class Student {
         return null;
     }
 
-    // save new student to database
     public void save() {
         String sql = "INSERT INTO students (first_name, last_name, age, grades) VALUES (?, ?, ?, ?)";
 
@@ -144,7 +138,6 @@ public class Student {
         }
     }
 
-    // update grades in database
     public void updateGrades() {
         String sql = "UPDATE students SET grades = ? WHERE id = ?";
 
@@ -162,7 +155,6 @@ public class Student {
         }
     }
 
-    // delete student from database
     public void delete() {
         String sql = "DELETE FROM students WHERE id = ?";
 

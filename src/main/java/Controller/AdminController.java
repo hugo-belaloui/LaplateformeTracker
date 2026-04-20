@@ -27,7 +27,6 @@ public class AdminController {
     public void initialize() {
         loadUsers();
 
-        // show details when a user is selected
         userListView.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> {
                 if (newValue != null) {

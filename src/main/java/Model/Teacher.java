@@ -18,17 +18,14 @@ public class Teacher {
         this.userId = userId;
     }
 
-    // getters
     public Long getId()          { return id; }
     public String getFirstName() { return firstName; }
     public String getLastName()  { return lastName; }
     public Long getUserId()      { return userId; }
 
-    // setters
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName)   { this.lastName = lastName; }
 
-    // find teacher by their user_id
     public static Teacher findByUserId(Long userId) {
         String sql = "SELECT * FROM teachers WHERE user_id = ?";
 
@@ -53,7 +50,6 @@ public class Teacher {
         return null;
     }
 
-    // save new teacher to database
     public void save() {
         String sql = "INSERT INTO teachers (first_name, last_name, user_id) VALUES (?, ?, ?)";
 
@@ -70,7 +66,6 @@ public class Teacher {
         }
     }
 
-    // delete this teacher from database
     public void delete() {
         String sql = "DELETE FROM teachers WHERE id = ?";
 
