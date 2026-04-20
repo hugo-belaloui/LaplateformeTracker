@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -18,15 +19,33 @@ import Utils.StageManager;
 import Utils.SessionManager;
 
 public class TeacherController {
+    @FXML
+    private ListView<String> classListView;
+    @FXML
+    private ListView<String> studentListView;
+    @FXML
+    private Button addStudentButton;
+    @FXML
+    private Button delStudentButton;
+    @FXML
+    private ListView<String> gradesListView;
+    @FXML
+    private Button addGradeButton;
+    @FXML
+    private Button delGradeButton;
+    @FXML
+    private Button editGradeButton;
+    @FXML
+    private Text firstNameText;
+    @FXML
+    private Text lastNameText;
+    @FXML
+    private Text ageText;
+    @FXML
+    private Text avgGradesText;
 
-    @FXML private ListView<String> classListView;
-    @FXML private ListView<String> studentListView;
-    @FXML private Button addStudentButton;
-    @FXML private Button delStudentButton;
-    @FXML private Text firstNameText;
-    @FXML private Text lastNameText;
-    @FXML private Text ageText;
-    @FXML private Text avgGradesText;
+    private ClassName selectedClass = null;
+    private Student selectedStudent = null;
 
     private ClassName selectedClass = null;
     private ArrayList<ClassName> classes = new ArrayList<>();
@@ -56,9 +75,20 @@ public class TeacherController {
         studentListView.setItems(FXCollections.observableArrayList(studentNames));
     }
 
+    private void loadGradesPanel(Student s) {
+        ArrayList<String> gradeStrings = new ArrayList<>();
+        for (double grade : s.getGrades()) {
+            gradeStrings.add(String.format("%.2f", grade));
+        }
+        gradesListView.setItems(FXCollections.observableArrayList(gradeStrings));
+    }
+
     private void showStudentDetails(String fullName) {
         for (Student s : selectedClass.getStudents()) {
             if ((s.getFirstName() + " " + s.getLastName()).equals(fullName)) {
+                selectedStudent = s;
+                selectedStudent.reloadGrades();
+
                 firstNameText.setText(s.getFirstName());
                 lastNameText.setText(s.getLastName());
                 ageText.setText(String.valueOf(s.getAge()));
@@ -70,15 +100,96 @@ public class TeacherController {
                         sum += grade;
                     }
                     avgGradesText.setText(String.format("%.2f", sum / grades.size()));
+                } else {
+                    avgGradesText.setText("-");
                 }
+
+                loadGradesPanel(s);
                 return;
             }
         }
     }
 
     @FXML
-    public void handleAddStudent() {
-        if (selectedClass == null) return;
+    private void handleAddGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Grade");
+        dialog.setHeaderText("Add a grade for " + selectedStudent.getFirstName());
+        dialog.setContentText("Grade:");
+
+        /* Optional<String> bcs thats what dialog.showAndWait() returns */
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                double grade = Double.parseDouble(value.trim());
+                selectedStudent.addGrade(grade);
+                selectedStudent.updateGrades();
+                loadGradesPanel(selectedStudent);
+                showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+            }
+            catch (NumberFormatException e) {
+                System.err.println("Error made when adding grade.");
+            }
+        });
+    }
+
+    @FXML
+    private void handleDeleteGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        int index = gradesListView.getSelectionModel().getSelectedIndex();
+        if (index == -1) {
+            return;
+        }
+
+        selectedStudent.getGrades().remove(index);
+        selectedStudent.updateGrades();
+        showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+    }
+
+    @FXML
+    private void handleEditGrade() {
+        if (selectedStudent == null) {
+            return;
+        }
+
+        int index = gradesListView.getSelectionModel().getSelectedIndex();
+        if (index == -1) {
+            return;
+        }
+
+        double currentGrade = selectedStudent.getGrades().get(index);
+
+        TextInputDialog dialog = new TextInputDialog(String.format("%.2f", currentGrade));
+        dialog.setTitle("Edit Grade");
+        dialog.setHeaderText("Edit grade for " + selectedStudent.getFirstName());
+        dialog.setContentText("New value:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                double newGrade = Double.parseDouble(value.trim());
+                selectedStudent.getGrades().set(index, newGrade);
+                selectedStudent.updateGrades();
+                showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
+            } 
+            catch (NumberFormatException e) {
+            }
+        });
+    }
+
+    
+    @FXML
+    private void handleAddStudent() {
+        if (selectedClass == null) 
+        {
+            return;}
 
         Dialog<Student> dialog = new Dialog<>();
         dialog.setTitle("Add Student");
@@ -120,9 +231,9 @@ public class TeacherController {
 
         Optional<Student> result = dialog.showAndWait();
         result.ifPresent(student -> {
-            student.save();                    // saves to database ✅
-            selectedClass.addStudent(student); // adds to current view
-            loadStudentPanel(selectedClass);   // refreshes the list
+            student.save();
+            selectedClass.addStudent(student);
+            loadStudentPanel(selectedClass);
         });
     }
 
@@ -133,20 +244,22 @@ public class TeacherController {
         String selected = studentListView.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        // find student and delete from database ✅
+        Student toDelete = null;
         for (Student s : selectedClass.getStudents()) {
             if ((s.getFirstName() + " " + s.getLastName()).equals(selected)) {
-                s.delete();
+                toDelete = s;
                 break;
             }
         }
+        if (toDelete == null) return;
+        toDelete.delete();
+        selectedClass.getStudents().remove(toDelete);
 
-        // remove from memory
         selectedClass.getStudents().removeIf(s ->
             (s.getFirstName() + " " + s.getLastName()).equals(selected)
         );
 
-        // refresh list and clear details
+
         loadStudentPanel(selectedClass);
         firstNameText.setText("-");
         lastNameText.setText("-");
@@ -155,7 +268,7 @@ public class TeacherController {
     }
 
     @FXML
-    public void handleLogout() { // ✅ added
+    public void handleLogout() {
         SessionManager.clear();
         StageManager.switchScene("/View/Login.fxml");
     }

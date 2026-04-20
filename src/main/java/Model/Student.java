@@ -102,6 +102,43 @@ public class Student {
         }
     }
 
+    public void updateGrades(){
+        try (Connection conn = DatabaseConnection.getconnection()){
+            String sql = "UPDATE students SET grades = ? WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            Double[] gradesArray = this.grades.toArray(new Double[0]);
+            Array sqlArray = conn.createArrayOf("float8", gradesArray);
+            stmt.setArray(1, sqlArray);
+            stmt.setLong(2, this.id);
+
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reloadGrades(){
+        try (Connection conn = DatabaseConnection.getconnection()){
+            PreparedStatement stmt = conn.prepareStatement("SELECT grades FROM students WHERE id = ?");
+            stmt.setLong(1, this.id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                this.grades.clear();
+                Array gradesArray = rs.getArray("grades");
+                if (gradesArray != null) {
+                    Double[] gradesRaw = (Double[]) gradesArray.getArray();
+                    for (double grade : gradesRaw) {
+                        this.grades.add(grade);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void delete(){
         try (Connection conn = Utils.DatabaseConnection.getConnection()){
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM students WHERE id = ?");
