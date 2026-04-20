@@ -1,4 +1,4 @@
-package utils;
+package Utils;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ public class DatabaseConnection {
     private static final String USER = "postgres";
     private static final String PASSWORD = "010203";
 
-    public static Connection getconnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

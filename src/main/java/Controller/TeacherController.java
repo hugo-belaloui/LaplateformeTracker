@@ -15,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import Model.ClassName;
 import Model.Student;
+import Utils.StageManager;
+import Utils.SessionManager;
 
 public class TeacherController {
     @FXML
@@ -45,21 +47,20 @@ public class TeacherController {
     private ClassName selectedClass = null;
     private Student selectedStudent = null;
 
+    private ClassName selectedClass = null;
     private ArrayList<ClassName> classes = new ArrayList<>();
 
     private void loadFromDatabase() {
-        ClassName allStudents = new ClassName("All Students");
+        ClassName allStudents = new ClassName(1L, "All Students"); // ✅ fixed
 
         for (Student s : Student.findAll()) {
             allStudents.addStudent(s);
         }
-
         classes.add(allStudents);
     }
 
     private void loadClassPanel() {
         ArrayList<String> classNames = new ArrayList<>();
-
         for (ClassName c : classes) {
             classNames.add(c.getName());
         }
@@ -68,7 +69,6 @@ public class TeacherController {
 
     private void loadStudentPanel(ClassName c) {
         ArrayList<String> studentNames = new ArrayList<>();
-
         for (Student s : c.getStudents()) {
             studentNames.add(s.getFirstName() + " " + s.getLastName());
         }
@@ -203,15 +203,15 @@ public class TeacherController {
         grid.setVgap(10);
 
         TextField firstNameField = new TextField();
-        TextField lastNameField = new TextField();
-        TextField ageField = new TextField();
+        TextField lastNameField  = new TextField();
+        TextField ageField       = new TextField();
 
         grid.add(new Label("First name:"), 0, 0);
         grid.add(firstNameField, 1, 0);
-        grid.add(new Label("Last name:"), 0, 1);
-        grid.add(lastNameField, 1, 1);
-        grid.add(new Label("Age:"), 0, 2);
-        grid.add(ageField, 1, 2);
+        grid.add(new Label("Last name:"),  0, 1);
+        grid.add(lastNameField,  1, 1);
+        grid.add(new Label("Age:"),        0, 2);
+        grid.add(ageField,       1, 2);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -219,8 +219,8 @@ public class TeacherController {
             if (buttonClicked == addButton) {
                 try {
                     String firstName = firstNameField.getText().trim();
-                    String lastName = lastNameField.getText().trim();
-                    byte age = Byte.parseByte(ageField.getText().trim());
+                    String lastName  = lastNameField.getText().trim();
+                    byte age         = Byte.parseByte(ageField.getText().trim());
                     return new Student(null, firstName, lastName, age, null);
                 } catch (NumberFormatException e) {
                     return null;
@@ -237,9 +237,8 @@ public class TeacherController {
         });
     }
 
-    /* This is for when user deletes student button */
     @FXML
-    private void handleDeleteStudent() {
+    public void handleDeleteStudent() {
         if (selectedClass == null) return;
 
         String selected = studentListView.getSelectionModel().getSelectedItem();
@@ -256,36 +255,47 @@ public class TeacherController {
         toDelete.delete();
         selectedClass.getStudents().remove(toDelete);
 
-        loadStudentPanel(selectedClass);
+        selectedClass.getStudents().removeIf(s ->
+            (s.getFirstName() + " " + s.getLastName()).equals(selected)
+        );
 
+
+        loadStudentPanel(selectedClass);
         firstNameText.setText("-");
         lastNameText.setText("-");
         ageText.setText("-");
         avgGradesText.setText("-");
     }
 
-    /* This function is called when login is made */
+    @FXML
+    public void handleLogout() {
+        SessionManager.clear();
+        StageManager.switchScene("/View/Login.fxml");
+    }
+
     @FXML
     public void initialize() {
         loadFromDatabase();
         loadClassPanel();
 
-        classListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                for (ClassName c : classes) {
-                    if (c.getName().equals(newValue)) {
-                        selectedClass = c;
-                        loadStudentPanel(c);
-                        break;
+        classListView.getSelectionModel().selectedItemProperty().addListener(
+            (observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    for (ClassName c : classes) {
+                        if (c.getName().equals(newValue)) {
+                            selectedClass = c;
+                            loadStudentPanel(c);
+                            break;
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        studentListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && selectedClass != null) {
-                showStudentDetails(newValue);
-            }
-        });
+        studentListView.getSelectionModel().selectedItemProperty().addListener(
+            (observable, oldValue, newValue) -> {
+                if (newValue != null && selectedClass != null) {
+                    showStudentDetails(newValue);
+                }
+            });
     }
 }
