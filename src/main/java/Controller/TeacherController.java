@@ -1,40 +1,37 @@
 package Controller;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import Model.ClassName;
+import Model.Student;
+import Utils.SessionManager;
+import Utils.StageManager;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import Model.ClassName;
-import Model.Student;
-import Utils.StageManager;
-import Utils.SessionManager;
 
 public class TeacherController {
     @FXML
     private ListView<String> classListView;
     @FXML
     private ListView<String> studentListView;
-    @FXML
-    private Button addStudentButton;
-    @FXML
-    private Button delStudentButton;
+
     @FXML
     private ListView<String> gradesListView;
-    @FXML
-    private Button addGradeButton;
-    @FXML
-    private Button delGradeButton;
-    @FXML
-    private Button editGradeButton;
+
     @FXML
     private Text firstNameText;
     @FXML
@@ -83,6 +80,8 @@ public class TeacherController {
     }
 
     private void showStudentDetails(String fullName) {
+        double sum;
+
         for (Student s : selectedClass.getStudents()) {
             if ((s.getFirstName() + " " + s.getLastName()).equals(fullName)) {
                 selectedStudent = s;
@@ -94,12 +93,13 @@ public class TeacherController {
 
                 ArrayList<Double> grades = s.getGrades();
                 if (!grades.isEmpty()) {
-                    double sum = 0;
+                    sum = 0;
                     for (double grade : grades) {
                         sum += grade;
                     }
                     avgGradesText.setText(String.format("%.2f", sum / grades.size()));
-                } else {
+                }
+                else {
                     avgGradesText.setText("-");
                 }
 
@@ -179,6 +179,7 @@ public class TeacherController {
                 showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
             } 
             catch (NumberFormatException e) {
+                System.err.println("Grade editing went wrong");
             }
         });
     }
@@ -186,9 +187,9 @@ public class TeacherController {
     
     @FXML
     private void handleAddStudent() {
-        if (selectedClass == null) 
-        {
-            return;}
+        if (selectedClass == null) {
+            return;
+        }
 
         Dialog<Student> dialog = new Dialog<>();
         dialog.setTitle("Add Student");
@@ -264,6 +265,35 @@ public class TeacherController {
         lastNameText.setText("-");
         ageText.setText("-");
         avgGradesText.setText("-");
+    }
+
+    @FXML
+    private void handleExportCSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export Grades as CSV");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        fileChooser.setInitialFileName("grades.csv");
+
+        Stage stage = (Stage) classListView.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+        if (file == null) return;
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write("First Name,Last Name,Grades\n");
+            for (ClassName c : classes) {
+                for (Student s : c.getStudents()) {
+                    s.reloadGrades();
+                    StringBuilder row = new StringBuilder();
+                    row.append(s.getFirstName()).append(",").append(s.getLastName());
+                    for (double grade : s.getGrades()) {
+                        row.append(",").append(String.format("%.2f", grade));
+                    }
+                    writer.write(row + "\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
