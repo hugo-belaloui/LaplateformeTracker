@@ -1,45 +1,58 @@
 package Controller;
 
-import View.StageManager;
+import Utils.StageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
-import db.initdatabase;
+import Utils.SessionManager;
+import Model.User;
 
 public class LoginController {
-    @FXML
-    private TextField usernameField;
+
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
     @FXML
-    private PasswordField passwordField;
+    public void handleLogin() {
+        String email    = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
 
-    @FXML
-    private void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-        if (!username.equals("admin") && !password.equals("admin")) {
-            errorLogin();
-            return ;
+        // check fields are not empty
+        if (email.isEmpty() || password.isEmpty()) {
+            showError("Please fill in all fields.");
+            return;
         }
-        if (StageManager.switchScene("/View/TeacherDashboard.fxml") == 1) {
-                System.err.println("Error loading FXML file.");
-                return ;
+
+        // look up user in database
+        User user = User.findByEmail(email);
+
+        // wrong email or password
+        if (user == null || !user.getPassword().equals(password)) {
+            showError("Wrong email or password.");
+            return;
         }
-        initdatabase.init();
+
+        // save session
+        SessionManager.setEmail(user.getEmail());
+        SessionManager.setRole(user.getRole());
+
+        // go to the right dashboard
+        if (user.getRole().equals("admin")) {
+            StageManager.switchScene("/View/AdminDashboard.fxml");
+        } else if (user.getRole().equals("teacher")) {
+            StageManager.switchScene("/View/TeacherDashboard.fxml");
+        } else if (user.getRole().equals("student")) {
+            StageManager.switchScene("/View/StudentDashboard.fxml");
+        }
     }
 
-    private void errorLogin() {
+    private void showError(String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Login Error");
         alert.setHeaderText("Login failed");
-        alert.setContentText("Username or password entered is incorect.");
+        alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
