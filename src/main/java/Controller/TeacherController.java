@@ -121,6 +121,7 @@ public class TeacherController {
         dialog.setHeaderText("Add a grade for " + selectedStudent.getFirstName());
         dialog.setContentText("Grade:");
 
+        /* Optional<String> bcs thats what dialog.showAndWait() returns */
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(value -> {
             try {
@@ -129,8 +130,9 @@ public class TeacherController {
                 selectedStudent.updateGrades();
                 loadGradesPanel(selectedStudent);
                 showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
-            } catch (NumberFormatException e) {
-                // user typed something that isn't a number, do nothing
+            }
+            catch (NumberFormatException e) {
+                System.err.println("Error made when adding grade.");
             }
         });
     }
@@ -176,12 +178,13 @@ public class TeacherController {
                 selectedStudent.getGrades().set(index, newGrade);
                 selectedStudent.updateGrades();
                 showStudentDetails(selectedStudent.getFirstName() + " " + selectedStudent.getLastName());
-            } catch (NumberFormatException e) {
-                // user typed something that isn't a number, do nothing
+            } 
+            catch (NumberFormatException e) {
             }
         });
     }
 
+    
     @FXML
     private void handleAddStudent() {
         if (selectedClass == null) 
@@ -234,6 +237,7 @@ public class TeacherController {
         });
     }
 
+    /* This is for when user deletes student button */
     @FXML
     private void handleDeleteStudent() {
         if (selectedClass == null) return;
@@ -241,7 +245,16 @@ public class TeacherController {
         String selected = studentListView.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        selectedClass.getStudents().removeIf(s -> (s.getFirstName() + " " + s.getLastName()).equals(selected));
+        Student toDelete = null;
+        for (Student s : selectedClass.getStudents()) {
+            if ((s.getFirstName() + " " + s.getLastName()).equals(selected)) {
+                toDelete = s;
+                break;
+            }
+        }
+        if (toDelete == null) return;
+        toDelete.delete();
+        selectedClass.getStudents().remove(toDelete);
 
         loadStudentPanel(selectedClass);
 
@@ -251,6 +264,7 @@ public class TeacherController {
         avgGradesText.setText("-");
     }
 
+    /* This function is called when login is made */
     @FXML
     public void initialize() {
         loadFromDatabase();
