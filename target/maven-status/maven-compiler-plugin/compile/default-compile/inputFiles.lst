@@ -1,13 +1,13 @@
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Model\Student.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Controller\AdminController.java
-C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\utils\SessionManager.java
-C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\utils\databaseconnection.java
+C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Utils\SessionManager.java
+C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Utils\DatabaseConnection.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Model\User.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Controller\TeacherController.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Controller\LoginController.java
-C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\db\initdatabase.java
+C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Db\InitDatabase.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\LaPlateformeTracker.java
-C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\utils\StageManager.java
+C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Utils\StageManager.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Model\Teacher.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Model\ClassName.java
 C:\Users\achra\OneDrive\Desktop\project\LaplateformeTracker\src\main\java\Controller\StudentController.java
