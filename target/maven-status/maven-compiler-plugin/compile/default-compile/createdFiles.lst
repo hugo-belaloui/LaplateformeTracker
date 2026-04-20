@@ -1,0 +1,10 @@
+Model\Student.class
+Model\Teacher.class
+LaPlateformeTracker.class
+Utils\DatabaseConnection.class
+Controller\TeacherController.class
+Model\ClassName.class
+Model\User.class
+Controller\StudentController.class
+Controller\LoginController.class
+Db\InitDatabase.class
