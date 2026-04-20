@@ -1,5 +1,5 @@
-import Utils.StageManager;
-import Db.InitDatabase;
+import utils.StageManager;
+import db.InitDatabase;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

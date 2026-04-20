@@ -1,8 +1,8 @@
-package Db;
+package db;
 
 import java.sql.Connection;
 import java.sql.Statement;
-import Utils.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class InitDatabase {
 

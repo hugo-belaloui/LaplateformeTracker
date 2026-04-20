@@ -1,10 +1,10 @@
-package Controller;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import Utils.StageManager;
-import Utils.SessionManager;
+import utils.StageManager;
+import utils.SessionManager;
 
 public class StudentController {
 

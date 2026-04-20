@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -13,10 +13,10 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import Model.ClassName;
-import Model.Student;
-import Utils.StageManager;
-import Utils.SessionManager;
+import model.ClassName;
+import model.Student;
+import utils.StageManager;
+import utils.SessionManager;
 
 public class TeacherController {
     @FXML

@@ -1,9 +1,9 @@
-package Model;
+package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import Utils.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class Teacher {
     private Long id;

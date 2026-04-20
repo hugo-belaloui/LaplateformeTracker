@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;

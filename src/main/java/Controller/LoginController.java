@@ -1,13 +1,13 @@
-package Controller;
+package controller;
 
-import Utils.StageManager;
+import utils.StageManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import Utils.SessionManager;
-import Model.User;
+import utils.SessionManager;
+import model.User;
 
 public class LoginController {
 

@@ -1,11 +1,11 @@
-package Model;
+package model;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import Utils.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class Student {
     private Long id;
@@ -44,7 +44,7 @@ public class Student {
 
     public static ArrayList<Student> findAll(){
         ArrayList<Student> students = new ArrayList<>();
-        try (Connection conn = Utils.DatabaseConnection.getConnection()){
+        try (Connection conn = DatabaseConnection.getConnection()){
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM students");
             ResultSet rs = stmt.executeQuery();
 
@@ -140,7 +140,7 @@ public class Student {
     }
 
     public void delete(){
-        try (Connection conn = Utils.DatabaseConnection.getConnection()){
+        try (Connection conn = DatabaseConnection.getConnection()){
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM students WHERE id = ?");
             stmt.setLong(1, this.id);
             stmt.executeUpdate();
@@ -150,7 +150,7 @@ public class Student {
     }
 
     public static Student findByUserId(Long userId){
-        try (Connection conn = Utils.DatabaseConnection.getConnection() ){
+        try (Connection conn = DatabaseConnection.getConnection() ){
             String sql = "SELECT * FROM students WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, userId);

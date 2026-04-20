@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.IOException; //deals with input errors
 import java.io.InputStream; 
@@ -15,7 +15,7 @@ public class DatabaseConnection {
 
     {
         //classpath java looks for database.properties without absolute path
-        try (InputStream input = DatabaseConnector.class.getClassLoader().getResourceAsStream("database.properties"))   
+        try (InputStream input = DatabaseConnection.class.getClassLoader().getResourceAsStream("database.properties"))   
         {
             if (input == null) 
             {

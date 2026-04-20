@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.util.Optional;
 import javafx.collections.FXCollections;
@@ -9,9 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import Model.User;
-import Utils.SessionManager;
-import Utils.StageManager;
+import model.User;
+import utils.SessionManager;
+import utils.StageManager;
 import java.util.ArrayList;
 
 public class AdminController {

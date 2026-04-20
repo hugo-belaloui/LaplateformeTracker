@@ -11,7 +11,7 @@
 <VBox prefHeight="600.0" prefWidth="900.0"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Controller.AdminController">
+      fx:controller="controller.AdminController">
   <children>
 
     <!-- Top bar -->
